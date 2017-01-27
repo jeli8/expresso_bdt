@@ -3,8 +3,8 @@ import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
 import spock.lang.*
 
-// Hit 'Run Script' below
-class Expresso extends Specification {
+
+class ExpressoOutput extends Specification {
     def "testing for valid output to debug"() {
         def client = new RESTClient( 'http://loadus.exelator.com/load/' )
         def requestParams = [ p : '227', g : '001', dbg : 'smtdn9', response : 'json' ]
@@ -21,5 +21,4 @@ class Expresso extends Specification {
             println JsonOutput.prettyPrint(object.toString())
     }
 }
-
 
