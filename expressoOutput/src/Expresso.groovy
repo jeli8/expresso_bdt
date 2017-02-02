@@ -5,10 +5,10 @@ import spock.lang.*
 
 
 class ExpressoOutput extends Specification {
-        @Shared exp_uri = 'http://nyjexp001.exelator.com:8080'
-        @Shared client = new RESTClient()
-        @Shared requestParams = [p: '227', g: '001', dbg: 'smtdn9', response: 'json' ]
-        @Shared objResp = client.get(path : '/load', query : requestParams, uri: exp_uri)
+    @Shared exp_uri = 'http://nyjexp001.exelator.com:8080'
+    @Shared client = new RESTClient()
+    @Shared requestParams = [p: '227', g: '001', dbg: 'smtdn9', response: 'json' ]
+    @Shared objResp = client.get(path : '/load', query : requestParams, uri: exp_uri)
     def "response is 200"() {
         expect:
             objResp.status == 200  // HTTP response code is 200
