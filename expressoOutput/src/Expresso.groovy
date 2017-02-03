@@ -2,7 +2,9 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
 import spock.lang.*
-import spock.util.mop.Use
+
+import java.util.concurrent.TimeUnit
+
 
 class ExpressoCall {
     /*TODO Implement POST for batch calls */
@@ -12,7 +14,7 @@ class ExpressoCall {
     private client = new RESTClient()
     private Object restResponse
     private int responseCode
-    private Map<String, ?> response
+    private Object response
 
     ExpressoCall(String uri, Map requestParams, String path) {
         this.uri = uri
@@ -34,13 +36,15 @@ class ExpressoCall {
 
 }
 
-
+@Title("Testing for valid expresso debug output")
+@Narrative("Test and arbitrary expresso call to see if the debug returns in time with the proper keys")
 class ExpressoOutput extends Specification {
     @Shared expCall = new ExpressoCall(
             'http://nyjexp010.exelator.com:8080',
             [p: '227', g: '001', dbg: 'smtdn9', response: 'json' ],
             '/load')
 
+    @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
     def expressoHelper(expCall){
         expCall.getCall()
     }
