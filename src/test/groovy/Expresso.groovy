@@ -3,6 +3,7 @@ import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
 import spock.lang.*
 
+
 import java.util.concurrent.TimeUnit
 
 
@@ -38,7 +39,7 @@ class ExpressoCall {
 
 @Title("Testing for valid expresso debug output")
 @Narrative("Test and arbitrary expresso call to see if the debug returns in time with the proper keys")
-class ExpressoOutput extends Specification {
+class ExpressoOutputSpec extends Specification {
     @Shared expCall = new ExpressoCall(
             'http://nyjexp010.exelator.com:8080',
             [p: '227', g: '001', dbg: 'smtdn9', response: 'json' ],
