@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit
 
 class ExpressoCall {
     /*TODO Implement POST for batch calls */
+    public static final String DEV_PROPS = "dev.env.properties"
+    public static final String PROD_PROPS = "prod.env.properties"
     private String uri
     private String path
     private Map<String,?> requestParams
@@ -17,11 +19,33 @@ class ExpressoCall {
     private int responseCode
     private Object response
 
+
+
     ExpressoCall(String uri, Map requestParams, String path) {
         this.uri = uri
         this.requestParams = requestParams
         this.path = path
+        def propertiesFile = getPropertiesFile()
+        loadPropertiesFromFIle(propertiesFile)
     }
+
+    def getPropertiesFile() {
+        String env = System.getProperty("env");
+        if (env == null || env.isEmpty() || "DEV".equalsIgnoreCase(env)) {
+            return DEV_PROPS
+        } else {
+            return PROD_PROPS
+        }
+    }
+
+    def loadPropertiesFromFIle(Properties properties) {
+        Properties props = new Properties();
+        final InputStream stream = this.getClass().getResourceAsStream(DEV_PROPS)
+
+        props.load(stream);
+        return props;
+    }
+
 
     def getCall(){
         this.restResponse = this.client.get(path : this.path, query : this.requestParams, uri: this.uri)
