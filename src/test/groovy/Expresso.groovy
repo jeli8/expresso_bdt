@@ -1,4 +1,3 @@
-import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
 import spock.lang.*
@@ -9,8 +8,7 @@ import java.util.concurrent.TimeUnit
 
 class ExpressoCall {
     /*TODO Implement POST for batch calls */
-    public static final String DEV_PROPS = "dev.env.properties"
-    public static final String PROD_PROPS = "prod.env.properties"
+
     private String uri
     private String path
     private Map<String,?> requestParams
@@ -22,29 +20,13 @@ class ExpressoCall {
 
 
     ExpressoCall(String uri, Map requestParams, String path) {
+
         this.uri = uri
         this.requestParams = requestParams
         this.path = path
-        def propertiesFile = getPropertiesFile()
-        loadPropertiesFromFIle(propertiesFile)
     }
 
-    def getPropertiesFile() {
-        String env = System.getProperty("env");
-        if (env == null || env.isEmpty() || "DEV".equalsIgnoreCase(env)) {
-            return DEV_PROPS
-        } else {
-            return PROD_PROPS
-        }
-    }
 
-    def loadPropertiesFromFIle(Properties properties) {
-        Properties props = new Properties();
-        final InputStream stream = this.getClass().getResourceAsStream(DEV_PROPS)
-
-        props.load(stream);
-        return props;
-    }
 
 
     def getCall(){
@@ -63,11 +45,15 @@ class ExpressoCall {
 
 @Title("Testing for valid expresso debug output")
 @Narrative("Test and arbitrary expresso call to see if the debug returns in time with the proper keys")
-class ExpressoOutputSpec extends Specification {
-    @Shared expCall = new ExpressoCall(
-            'http://nyjexp010.exelator.com:8080',
-            [p: '227', g: '001', dbg: 'smtdn9', response: 'json' ],
-            '/load')
+class ExpressoOutputSpec extends Specification implements  AppConfiguration.PropertyKeys{
+
+    @Shared appConfiguration = AppConfiguration.getInstance()
+
+    @Shared expCall = new ExpressoCall(getUri(), [p: '227', g: '001', dbg: 'smtdn9', response: 'json' ], '/load')
+
+    def getUri () {
+        return appConfiguration.getProperty(BASE_URL)
+    }
 
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
     def expressoHelper(expCall){
@@ -91,6 +77,8 @@ class ExpressoOutputSpec extends Specification {
             expCall.response.containsKey("logsMap")
             expCall.response.containsKey("kafkaMap")
     }
+
+
 
 }
 
